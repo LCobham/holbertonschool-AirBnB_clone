@@ -6,6 +6,7 @@
 
 import unittest
 from models.base_model import BaseModel
+from models import storage
 from datetime import datetime
 
 
@@ -37,6 +38,15 @@ class TestBaseModel(unittest.TestCase):
             self.assertTrue(model.created_at == model.updated_at)
             model.save()
             self.assertTrue(model.created_at < model.updated_at)
+        previous = storage.all().copy()
+        m4 = BaseModel()
+        current = storage.all().copy()
+        self.assertFalse(current == previous)
+        for key in previous.keys():
+            del current[key]
+        self.assertEqual(len(current), 1)
+        self.assertEqual(current[f"BaseModel.{m4.id}"], m4)
+
 
     def testString(self):
         for model in self.list_of_models:
