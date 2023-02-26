@@ -25,10 +25,10 @@ class FileStorage:
         """
             Creates new entry in the '__objects' dictionary:
             key = <obj class name>.id
-            value = obj 
+            value = obj
         """
         new_key = f"{type(obj).__name__}.{obj.id}"
-        FileStorage.__objects[new_key] =  obj
+        FileStorage.__objects[new_key] = obj
 
     def save(self):
         """
@@ -46,11 +46,15 @@ class FileStorage:
             in __file_path exists.
         """
         from models.base_model import BaseModel
+        from models.user import User
         try:
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as f:
                 loaded = json.load(f)
             for key, value in loaded.items():
-                loaded[key] = BaseModel(**value)
+                if value['__class__'] == "BaseModel":
+                    loaded[key] = BaseModel(**value)
+                elif value['__class__'] == "User":
+                    loaded[key] = User(**value)
             FileStorage.__objects = loaded
 
         except FileNotFoundError:

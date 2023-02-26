@@ -6,19 +6,13 @@
 """
 
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 import cmd
 import sys
 
 
-class HBNBCommand(cmd.Cmd):
-    """
-        Class for the AirBnB Clone command line interpreter.
-    """
-    
-    prompt = "(hbnb) "
-    doc_header = "Documented commands (type help <topic>):"
-    intro = """
+intro = """
             -----------------------------------------
             |       Welcome to the hbtn CLI.        |
             |       For help, input 'help'          |
@@ -26,13 +20,22 @@ class HBNBCommand(cmd.Cmd):
             -----------------------------------------
     """
 
+
+class HBNBCommand(cmd.Cmd):
+    """
+        Class for the AirBnB Clone command line interpreter.
+    """
+
+    prompt = "(hbnb) "
+    doc_header = "Documented commands (type help <topic>):"
+
     def do_quit(self, arg):
         """
             Quit command to exit the program
             Syntax: (hbtn) quit
         """
         sys.exit()
-    
+
     def do_EOF(self, arg):
         """
             Quit command to exit the program
@@ -53,6 +56,10 @@ class HBNBCommand(cmd.Cmd):
             new = BaseModel()
             new.save()
             print(new.id)
+        elif argv[0] == "User":
+            new = User()
+            new.save()
+            print(new.id)
         else:
             print("** class doesn't exist **")
 
@@ -63,34 +70,34 @@ class HBNBCommand(cmd.Cmd):
         argv = parse(arg)
         if len(argv) == 0:
             print("** class name missing **")
-        elif argv[0] != "BaseModel":
+        elif argv[0] not in ("BaseModel", "User"):
             print("** class doesn't exist **")
         elif len(argv) < 2:
             print("** instance id missing **")
         else:
             current_objs = storage.all()
-            key = "BaseModel." + argv[1]
+            key = argv[0] + "." + argv[1]
             obj = current_objs.get(key)
             if obj is None:
                 print("** no instance found **")
             else:
                 print(obj)
-    
+
     def do_destroy(self, arg):
         """
-            Destroys an instance of a a given model. 
+            Destroys an instance of a a given model.
             Syntax: (hbtn) destroy <class name> <id>
         """
         argv = parse(arg)
         if len(argv) == 0:
             print("** class name missing **")
-        elif argv[0] != "BaseModel":
+        elif argv[0] not in ("BaseModel", "User"):
             print("** class doesn't exist **")
         elif len(argv) < 2:
             print("** instance id missing **")
         else:
             current_objs = storage.all()
-            key = "BaseModel." + argv[1]
+            key = argv[0] + '.' + argv[1]
             if current_objs.get(key) is None:
                 print("** no instance found **")
             else:
@@ -104,11 +111,22 @@ class HBNBCommand(cmd.Cmd):
             Syntax: all <class name>
         """
         argv = parse(arg)
-        if len(argv) == 0 or argv[0] == "BaseModel":
-            current_objs = storage.all()
-            li = []
+        current_objs = storage.all()
+        li = []
+
+        if len(argv) == 0:
             for key in current_objs.keys():
                 li.append(str(current_objs.get(key)))
+            print(li)
+        elif argv[0] == "BaseModel":
+            for key, value in current_objs.items():
+                if type(value) is BaseModel:
+                    li.append(str(current_objs.get(key)))
+            print(li)
+        elif argv[0] == "User":
+            for key, value in current_objs.items():
+                if type(value) is User:
+                    li.append(str(current_objs.get(key)))
             print(li)
         else:
             print("** class doesn't exist **")
@@ -122,29 +140,29 @@ class HBNBCommand(cmd.Cmd):
         length = len(argv)
         if length == 0:
             print("** class name missing **")
-        elif argv[0] != "BaseModel":
+        elif argv[0] not in ("BaseModel", "User"):
             print("** class doesn't exist **")
         elif length < 2:
             print("** instance id missing **")
         else:
             current_objs = storage.all()
-            key = "BaseModel." + argv[1]
+            key = argv[0] + '.' + argv[1]
             if current_objs.get(key) is None:
                 print("** no instance found **")
             else:
                 if length < 3:
                     print("** attribute name missing **")
                 elif length < 4:
-                    print("** attribute name missing **")
+                    print("** value missing **")
                 else:
                     obj = current_objs.get(key)
                     setattr(obj, argv[2], argv[3])
                     obj.save()
 
 
-
 def parse(arg):
     return tuple(arg.split())
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
