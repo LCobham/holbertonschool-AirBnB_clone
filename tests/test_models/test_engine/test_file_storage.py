@@ -21,7 +21,6 @@ class TestFileStorage(unittest.TestCase):
     def testStorageAll(self):
         # Make sure dict is not empy
         new = BaseModel()
-        new.save()
 
         in_storage = storage.all()
         self.assertTrue(type(in_storage) is dict)
