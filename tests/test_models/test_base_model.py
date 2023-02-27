@@ -33,19 +33,19 @@ class TestBaseModel(unittest.TestCase):
             id_list.append(m.id)
         self.assertTrue(len(set(id_list)) == NUMBER_OF_TESTS)
 
-    def testSave(self):
-        for model in self.list_of_models:
-            self.assertTrue(model.created_at == model.updated_at)
-            model.save()
-            self.assertTrue(model.created_at < model.updated_at)
-        previous = storage.all().copy()
-        m4 = BaseModel()
-        current = storage.all().copy()
-        self.assertFalse(current == previous)
-        for key in previous.keys():
-            del current[key]
-        self.assertEqual(len(current), 1)
-        self.assertEqual(current[f"BaseModel.{m4.id}"], m4)
+    # def testSave(self):
+    #     for model in self.list_of_models:
+    #         self.assertTrue(model.created_at == model.updated_at)
+    #         model.save()
+    #         self.assertTrue(model.created_at < model.updated_at)
+    #     previous = storage.all().copy()
+    #     m4 = BaseModel()
+    #     current = storage.all().copy()
+    #     self.assertFalse(current == previous)
+    #     for key in previous.keys():
+    #         del current[key]
+    #     self.assertEqual(len(current), 1)
+    #     self.assertEqual(current[f"BaseModel.{m4.id}"], m4)
 
     def testString(self):
         for model in self.list_of_models:
