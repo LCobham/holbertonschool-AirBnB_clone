@@ -28,6 +28,17 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
     doc_header = "Documented commands (type help <topic>):"
+    error_msg = {
+        'no_class': "** class name missing **",
+        'wrong_class': "** class doesn't exist **",
+        'no_id': "** instance id missing **",
+        'wrong_id': "** no instance found **",
+        'no_attr': "** attribute name missing **",
+        'no_value': "** value missing **"
+    }
+
+    def emptyline(self):
+        pass
 
     def do_quit(self, arg):
         """
@@ -51,7 +62,7 @@ class HBNBCommand(cmd.Cmd):
         """
         argv = parse(arg)
         if len(argv) == 0:
-            print("** class name missing **")
+            print(HBNBCommand.error_msg["no_class"])
         elif argv[0] == "BaseModel":
             new = BaseModel()
             new.save()
@@ -61,7 +72,7 @@ class HBNBCommand(cmd.Cmd):
             new.save()
             print(new.id)
         else:
-            print("** class doesn't exist **")
+            print(HBNBCommand.error_msg["wrong_class"])
 
     def do_show(self, arg):
         """
@@ -69,17 +80,17 @@ class HBNBCommand(cmd.Cmd):
         """
         argv = parse(arg)
         if len(argv) == 0:
-            print("** class name missing **")
+            print(HBNBCommand.error_msg["no_class"])
         elif argv[0] not in ("BaseModel", "User"):
-            print("** class doesn't exist **")
+            print(HBNBCommand.error_msg["wrong_class"])
         elif len(argv) < 2:
-            print("** instance id missing **")
+            print(HBNBCommand.error_msg["no_id"])
         else:
             current_objs = storage.all()
             key = argv[0] + "." + argv[1]
             obj = current_objs.get(key)
             if obj is None:
-                print("** no instance found **")
+                print(HBNBCommand.error_msg["wrong_class"])
             else:
                 print(obj)
 
@@ -90,16 +101,16 @@ class HBNBCommand(cmd.Cmd):
         """
         argv = parse(arg)
         if len(argv) == 0:
-            print("** class name missing **")
+            print(HBNBCommand.error_msg["no_class"])
         elif argv[0] not in ("BaseModel", "User"):
-            print("** class doesn't exist **")
+            print(HBNBCommand.error_msg["wrong_class"])
         elif len(argv) < 2:
-            print("** instance id missing **")
+            print(HBNBCommand.error_msg["no_id"])
         else:
             current_objs = storage.all()
             key = argv[0] + '.' + argv[1]
             if current_objs.get(key) is None:
-                print("** no instance found **")
+                print(HBNBCommand.error_msg["wrong_id"])
             else:
                 del current_objs[key]
                 storage.save()
@@ -129,7 +140,7 @@ class HBNBCommand(cmd.Cmd):
                     li.append(str(current_objs.get(key)))
             print(li)
         else:
-            print("** class doesn't exist **")
+            print(HBNBCommand.error_msg["wrong_class"])
 
     def do_update(self, arg):
         """
@@ -139,21 +150,21 @@ class HBNBCommand(cmd.Cmd):
         argv = parse(arg)
         length = len(argv)
         if length == 0:
-            print("** class name missing **")
+            print(HBNBCommand.error_msg["no_class"])
         elif argv[0] not in ("BaseModel", "User"):
-            print("** class doesn't exist **")
+            print(HBNBCommand.error_msg["wrong_class"])
         elif length < 2:
-            print("** instance id missing **")
+            print(HBNBCommand.error_msg["no_id"])
         else:
             current_objs = storage.all()
             key = argv[0] + '.' + argv[1]
             if current_objs.get(key) is None:
-                print("** no instance found **")
+                print(HBNBCommand.error_msg["wrong_id"])
             else:
                 if length < 3:
-                    print("** attribute name missing **")
+                    print(HBNBCommand.error_msg["no_attr"])
                 elif length < 4:
-                    print("** value missing **")
+                    print(HBNBCommand.error_msg["no_value"])
                 else:
                     obj = current_objs.get(key)
                     setattr(obj, argv[2], argv[3])
