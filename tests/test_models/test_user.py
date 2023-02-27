@@ -29,4 +29,4 @@ class TestUser(unittest.TestCase):
         self.assertEqual(User.email, '')
         self.assertEqual(User.password, '')
         self.assertEqual(User.first_name, '')
-        self.assertEqual(User.password, '')
+        self.assertEqual(User.last_name, '')

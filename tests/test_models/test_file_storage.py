@@ -19,6 +19,10 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(type(storage) is FileStorage)
 
     def testStorageAll(self):
+        # Make sure dict is not empy
+        new = BaseModel()
+        new.save()
+
         in_storage = storage.all()
         self.assertTrue(type(in_storage) is dict)
 
@@ -32,6 +36,6 @@ class TestFileStorage(unittest.TestCase):
         new_bm = BaseModel(id=str(random.randrange(1, 1000)), created_at=now,
                            updated_at=now, random_attr="Random")
         storage.new(new_bm)
+        storage.save()
         current = storage.all()
-        from_current = current.get(f"{type(new_bm).__name__}.{new_bm.id}")
-        self.assertTrue(str(from_current), str(new_bm))
+        self.assertTrue(current.get(f"BaseModel.{new_bm.id}") is not None)
