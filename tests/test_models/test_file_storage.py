@@ -26,8 +26,6 @@ class TestFileStorage(unittest.TestCase):
             point_idx = k.find('.')
             self.assertEqual(k[:point_idx], type(v).__name__)
             self.assertEqual(k[point_idx + 1:], v.id)
-    
-
 
     def testStorageNewSaveAndReload(self):
         now = datetime.now().isoformat()
