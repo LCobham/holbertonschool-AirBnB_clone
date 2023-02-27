@@ -90,7 +90,7 @@ class HBNBCommand(cmd.Cmd):
             key = argv[0] + "." + argv[1]
             obj = current_objs.get(key)
             if obj is None:
-                print(HBNBCommand.error_msg["wrong_class"])
+                print(HBNBCommand.error_msg["wrong_id"])
             else:
                 print(obj)
 

@@ -37,7 +37,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.u1.last_name, "Doe")
         self.assertEqual(self.u1.email, "jdoe@email.com")
         self.assertEqual(self.u1.password, "password")
-    
+
     def testSerializationDeserialization(self):
         my_dict = self.u1.to_dict()
         self.assertTrue(type(my_dict) is dict)
@@ -45,4 +45,3 @@ class TestUser(unittest.TestCase):
         new_user = User(**my_dict)
         for key in my_dict.keys():
             self.assertEqual(getattr(self.u1, key), getattr(new_user, key))
-

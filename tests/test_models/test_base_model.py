@@ -47,7 +47,6 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(len(current), 1)
         self.assertEqual(current[f"BaseModel.{m4.id}"], m4)
 
-
     def testString(self):
         for model in self.list_of_models:
             self.assertEqual(str(model)[:11], "[BaseModel]")
