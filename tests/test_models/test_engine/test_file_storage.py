@@ -42,10 +42,15 @@ class TestFileStorage(unittest.TestCase):
 
     def testSave(self):
         first_len = len(storage.all())
-        new = BaseModel()
-        new.save()
+        now = datetime.now().isoformat()
+        new = BaseModel(id=str(random.randint(1, 10000)), created_at=now, updated_at=now, name="Luc")
+        storage.new(new)
+        storage.save()
         self.assertTrue(f"BaseModel.{new.id}" in storage.all().keys())
         self.assertEqual(len(storage.all()), first_len + 1)
+        with open(storage._FileStorage__file_path, 'r', encoding='utf-8') as f:
+            loaded = json.load(f)
+        self.assertTrue(f"BaseModel.{new.id}" in loaded.keys())
 
     def testReload(self):
         other = FileStorage()
@@ -53,7 +58,10 @@ class TestFileStorage(unittest.TestCase):
         current_S, current_R = storage.all(), other.all()
         for key in current_S:
             self.assertEqual(str(current_S[key]), str(current_R[key]))
-        new = BaseModel()
+
+        first_len = len(storage.all())
+        now = datetime.now().isoformat()
+        new = BaseModel(id='101', created_at=now, updated_at=now, name="Luc")
 
         with open(storage._FileStorage__file_path, 'r', encoding='utf-8') as f:
             loaded = json.load(f)
