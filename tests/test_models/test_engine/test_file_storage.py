@@ -14,6 +14,21 @@ import random
 import json
 
 
+class NewFileStorage(FileStorage):
+    """Class to test the reload method"""
+    __file_path = "random.json"
+
+    def save(self):
+        """
+            Serializes the '__objects' dictionary to the JSON file
+            with path = __file_path
+        """
+        all_objs = self.all()
+        to_dump = {key: value.to_dict() for key, value in all_objs.items()}
+        with open(NewFileStorage.__file_path, 'w', encoding='utf-8') as f:
+            json.dump(to_dump, f, indent=2)
+
+
 class TestFileStorage(unittest.TestCase):
     """Test FileStorage class"""
     def testStorageVar(self):
@@ -43,7 +58,8 @@ class TestFileStorage(unittest.TestCase):
     def testSave(self):
         first_len = len(storage.all())
         now = datetime.now().isoformat()
-        new = BaseModel(id=str(random.randint(1, 10000)), created_at=now, updated_at=now, name="Luc")
+        new = BaseModel(id=str(random.randint(1, 10000)),
+                        created_at=now, updated_at=now, name="Luc")
         storage.new(new)
         storage.save()
         self.assertTrue(f"BaseModel.{new.id}" in storage.all().keys())
@@ -70,6 +86,14 @@ class TestFileStorage(unittest.TestCase):
         for k, v in loaded.items():
             self.assertTrue(type(v) is dict)
             self.assertIsInstance(current_R[k], BaseModel)
+
+        other = NewFileStorage()
+        other.new(new)
+        other.save()
+        with open(other._NewFileStorage__file_path,
+                  'r', encoding='utf-8') as f:
+            loaded = json.load(f)
+        self.assertTrue(f"BaseModel.{new.id}" in loaded)
 
     def testFilePath(self):
         self.assertTrue(type(storage._FileStorage__file_path) is str)
