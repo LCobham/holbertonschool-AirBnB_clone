@@ -47,14 +47,26 @@ class FileStorage:
         """
         from models.base_model import BaseModel
         from models.user import User
+        from models.amenity import Amenity
+        from models.city import City
+        from models.place import Place
+        from models.review import Review
+        from models.state import State
+
+        cls_dict = {"BaseModel": BaseModel, "User": User,
+                    "Amenity": Amenity, "City": City,
+                    "Place": Place, "Review": Review,
+                    "State": State}
+
         try:
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as f:
                 loaded = json.load(f)
+
             for key, value in loaded.items():
-                if value['__class__'] == "BaseModel":
-                    loaded[key] = BaseModel(**value)
-                elif value['__class__'] == "User":
-                    loaded[key] = User(**value)
+                cls_name = value.get('__class__')
+                if cls_name in cls_dict.keys():
+                    my_cls = cls_dict.get(cls_name)
+                    loaded[key] = my_cls(**value)
             FileStorage.__objects = loaded
 
         except FileNotFoundError:
