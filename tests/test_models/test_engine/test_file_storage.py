@@ -11,6 +11,7 @@ from models.engine.file_storage import FileStorage
 from models import storage
 from datetime import datetime
 import random
+import json
 
 
 class TestFileStorage(unittest.TestCase):
@@ -38,3 +39,32 @@ class TestFileStorage(unittest.TestCase):
         storage.save()
         current = storage.all()
         self.assertTrue(current.get(f"BaseModel.{new_bm.id}") is not None)
+
+    def testSave(self):
+        first_len = len(storage.all())
+        new = BaseModel()
+        new.save()
+        self.assertTrue(f"BaseModel.{new.id}" in storage.all().keys())
+        self.assertEqual(len(storage.all()), first_len + 1)
+
+    def testReload(self):
+        other = FileStorage()
+        other.reload()
+        current_S, current_R = storage.all(), other.all()
+        for key in current_S:
+            self.assertEqual(str(current_S[key]), str(current_R[key]))
+        new = BaseModel()
+
+        with open("file.json", 'r', encoding='utf-8') as f:
+            loaded = json.load(f)
+
+        self.assertTrue(type(loaded) is dict)
+        for k, v in loaded.items():
+            self.assertTrue(type(v) is dict)
+            self.assertIsInstance(current_R[k], BaseModel)
+
+    def testFilePath(self):
+        self.assertTrue(type(storage._FileStorage__file_path) is str)
+
+    def testObjects(self):
+        self.assertTrue(type(storage._FileStorage__file_path) is dict)
