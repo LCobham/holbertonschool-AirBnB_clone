@@ -184,6 +184,36 @@ class HBNBCommand(cmd.Cmd):
                     setattr(obj, argv[2], argv[3])
                     obj.save()
 
+    def precmd(self, line):
+        idx = line.find('.')
+        if idx == -1:
+            return line
+        splitted = line.split('.')
+        if splitted[0] not in HBNBCommand.cls_dict.keys():
+            print(HBNBCommand.error_msg['wrong_class'])
+            return ''
+        if len(splitted) < 2:
+            return ''
+        if splitted[1] == 'all()':
+            return 'all ' + splitted[0]
+        if splitted[1] == 'count()':
+            count = 0
+            objs = storage.all()
+            for key, value in objs.items():
+                if type(value).__name__ == splitted[0]:
+                    count += 1
+            print(count)
+            return ''
+        if splitted[1].find("show(") == 0 and splitted[1].find(")") != -1:
+            start_idx, end_idx = splitted[1].find("("), splitted[1].find(")")
+            id = splitted[1][start_idx + 1:end_idx]
+            return 'show ' + splitted[0] + ' ' + id
+        if splitted[1].find("destroy(") == 0 and splitted[1].find(")") != -1:
+            start_idx, end_idx = splitted[1].find("("), splitted[1].find(")")
+            id = splitted[1][start_idx + 1:end_idx]
+            return 'destroy ' + splitted[0] + ' ' + id
+        return ''
+
 
 def parse(arg):
     return tuple(arg.split())
