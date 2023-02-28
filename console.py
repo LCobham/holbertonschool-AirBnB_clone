@@ -212,6 +212,13 @@ class HBNBCommand(cmd.Cmd):
             start_idx, end_idx = splitted[1].find("("), splitted[1].find(")")
             id = splitted[1][start_idx + 1:end_idx]
             return 'destroy ' + splitted[0] + ' ' + id
+        if splitted[1].find("update(") == 0 and splitted[1].find(")") != -1:
+            start_idx, end_idx = splitted[1].find("("), splitted[1].find(")")
+            args = splitted[1][start_idx + 1:end_idx]
+            args = args.split(',')
+            if len(args) < 3:
+                args += [' ', ' ', ' ']
+            return f"update {splitted[0]} {args[0]} {args[1]} {args[2]}"
         return ''
 
 
