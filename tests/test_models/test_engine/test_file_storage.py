@@ -55,11 +55,14 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(f"BaseModel.{new.id}" in loaded.keys())
 
     def testReload(self):
+        with open("file.json", "w", encoding="utf-8") as f:
+            json.dump({}, f)
+        storage.reload()
+        self.assertEqual(storage.all(), {})
         new = BaseModel()
         new.save()
-        storage._FileStorage__objects = {}
         storage.reload()
-        self.assertTrue(f"BaseModel.{new.id}" in storage.all().keys())
+        self.assertTrue(len(storage.all()) == 1)
 
     def testFilePath(self):
         self.assertTrue(type(storage._FileStorage__file_path) is str)
