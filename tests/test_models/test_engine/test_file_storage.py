@@ -55,7 +55,7 @@ class TestFileStorage(unittest.TestCase):
             self.assertEqual(str(current_S[key]), str(current_R[key]))
         new = BaseModel()
 
-        with open("file.json", 'r', encoding='utf-8') as f:
+        with open(storage._FileStorage__file_path, 'r', encoding='utf-8') as f:
             loaded = json.load(f)
 
         self.assertTrue(type(loaded) is dict)
@@ -67,4 +67,4 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(type(storage._FileStorage__file_path) is str)
 
     def testObjects(self):
-        self.assertTrue(type(storage._FileStorage__file_path) is dict)
+        self.assertTrue(type(storage._FileStorage__objects) is dict)

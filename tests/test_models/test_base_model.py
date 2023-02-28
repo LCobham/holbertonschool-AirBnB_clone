@@ -5,6 +5,7 @@
 
 
 import unittest
+import json
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
@@ -39,10 +40,11 @@ class TestBaseModel(unittest.TestCase):
             self.assertTrue(model.created_at == model.updated_at)
             model.save()
             self.assertTrue(model.created_at < model.updated_at)
-        other = FileStorage()
         m4 = BaseModel()
-        in_other = other.all()
-        self.assertTrue(f"BaseModel.{m4.id}" in in_other.keys())
+        m4.save()
+        with open(storage._FileStorage__file_path, 'r', encoding='utf-8') as f:
+            loaded = json.load(f)
+        self.assertTrue(f"BaseModel.{m4.id}" in loaded.keys())
 
     def testString(self):
         for model in self.list_of_models:
