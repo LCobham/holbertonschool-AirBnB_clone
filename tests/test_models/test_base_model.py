@@ -6,6 +6,7 @@
 
 import unittest
 from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
 from models import storage
 from datetime import datetime
 
@@ -38,14 +39,10 @@ class TestBaseModel(unittest.TestCase):
             self.assertTrue(model.created_at == model.updated_at)
             model.save()
             self.assertTrue(model.created_at < model.updated_at)
-        previous = storage.all().copy()
+        other = FileStorage()
         m4 = BaseModel()
-        current = storage.all().copy()
-        self.assertFalse(current == previous)
-        for key in previous.keys():
-            del current[key]
-        self.assertEqual(len(current), 1)
-        self.assertEqual(current[f"BaseModel.{m4.id}"], m4)
+        in_other = other.all()
+        self.assertTrue(f"BaseModel.{m4.id}" in in_other.keys())
 
     def testString(self):
         for model in self.list_of_models:
