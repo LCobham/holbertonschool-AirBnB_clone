@@ -91,9 +91,32 @@ Unit testing:
 python3 -m unittest discover tests
 ```
 
+## `file_storage.py`
+	
+This is the main responsable to make safe all the data in the storage system, it is also important do serialization and deserialization of JSON files
+The file contains:
+
+ - *all*: Returns all the '__objects' dictionary
+ - *new*: Creates new entry in the '__objects' dictionary
+ - *save*: Serializes the '__objects' dictionary to the JSON file with path = __file_path
+ - *reload*: Deserializes the JSON file to __objects if the path specified in __file_path exists.
+
 ## Classes
 
 BaseModel is our parent class, all of the future classes will inherit from this one, here are all common attributes and methods, but there are others classes:
 | NAME OF THE CLASS | ATTRIBUTES |
 |--|--|
-| |  |
+| User| `email` `password` `first name` `last name`
+| State | `name` |
+|City  | `state_id` `name` |
+| Amenity |`name`  |
+| Place |  `city_id` `user_id` `name` `description` `number_rooms` `number_bathrooms` `max_guest` `max_guest` `latitude` `longitude` `amenity_ids` |
+|Review  |  `place_id` `user_id` `text`|
+
+
+
+ 
+
+***AUTHORS***:
+[Lucas Cobham](https://github.com/LCobham)
+[Romina Benitez](https://github.com/Blingblinggiirl)
