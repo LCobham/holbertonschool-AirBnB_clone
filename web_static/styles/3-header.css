@@ -4,3 +4,9 @@ header {
     width: 100%;
     border-bottom: 1px solid #CCCCCC;
 }
+
+header div.header-logo {
+    height: 90%;
+    width: 14%;
+    background-image: url("../images/logo.png");
+}
